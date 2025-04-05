@@ -16,7 +16,7 @@ if funda_url:
         energielabel = soup.find('div', {'class': 'object-header__energylabel'})
         
         # Zoek naar de koopprijs
-        koopprijs = soup.find('div', {'class': 'object-header__price'})
+        koopprijs = soup.find('div', {'class': 'object-price'})
 
         # Controleer of beide gegevens zijn gevonden
         if energielabel and koopprijs:
