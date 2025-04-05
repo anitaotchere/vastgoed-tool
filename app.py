@@ -12,14 +12,18 @@ if funda_url:
         response = requests.get(funda_url, headers=headers)
         soup = BeautifulSoup(response.content, 'html.parser')
 
-        woonopp = soup.find(string="Wonen").find_next().text.strip()
-        kamers = soup.find(string="Aantal kamers").find_next().text.strip()
-        energielabel = soup.find(string="Energielabel").find_next().text.strip()
+        # Try to find woonopp, kamers, energielabel more generically
+        woonopp = soup.find('li', {'class': 'object-header__key-facts--item__value'})
+        kamers = soup.find('li', {'class': 'object-header__key-facts--item__value'})
+        energielabel = soup.find('div', {'class': 'object-header__energylabel'})
 
-        st.subheader("Gegevens uit Funda:")
-        st.write(f"**Woonoppervlakte:** {woonopp}")
-        st.write(f"**Aantal kamers:** {kamers}")
-        st.write(f"**Energielabel:** {energielabel}")
-
+        if woonopp and kamers and energielabel:
+            st.subheader("Gegevens uit Funda:")
+            st.write(f"**Woonoppervlakte:** {woonopp.text.strip()}")
+            st.write(f"**Aantal kamers:** {kamers.text.strip()}")
+            st.write(f"**Energielabel:** {energielabel.text.strip()}")
+        else:
+            st.error("Kan niet de juiste gegevens vinden op de Funda-pagina.")
+    
     except Exception as e:
         st.error(f"Er ging iets mis bij het ophalen van de gegevens: {e}")
